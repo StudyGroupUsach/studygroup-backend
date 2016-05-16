@@ -2,10 +2,17 @@
 <persistence version="2.1"
 	xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
-	<persistence-unit name="sakilaPU" transaction-type="JTA">
-		<jta-data-source>jdbc/sakila</jta-data-source>
-		<class>model.Actor</class>
-		<class>model.Film</class>
-		<class>model.FilmActor</class>
+	<persistence-unit name="studygroupPU" transaction-type="JTA">
+		<jta-data-source>jdbc/studygroup</jta-data-source>
+		<class>model.Carrera</class>
+		<class>model.GrupoHorario</class>
+		<class>model.GrupoHorarioPK</class>
+		<class>model.GrupoTemporal</class>
+		<class>model.GrupoTemporalPK</class>
+		<class>model.Lugar</class>
+		<class>model.PerfilAyudante</class>
+		<class>model.PerfilAyudantePK</class>
+		<class>model.Ramo</class>
+		<class>model.Usuario</class>
 	</persistence-unit>
 </persistence>

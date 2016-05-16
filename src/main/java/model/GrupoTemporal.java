@@ -30,6 +30,11 @@ public class GrupoTemporal implements Serializable {
 	@Column(name="inicio_temporal")
 	private Date inicioTemporal;
 
+	//bi-directional many-to-one association to Lugar
+	@ManyToOne
+	@JoinColumn(name="id_lugar")
+	private Lugar lugar;
+
 	//bi-directional many-to-one association to Ramo
 	@ManyToOne
 	@JoinColumn(name="ramo_id")
@@ -39,11 +44,6 @@ public class GrupoTemporal implements Serializable {
 	@ManyToOne
 	@JoinColumn(name="usuario_id")
 	private Usuario usuario;
-
-	//bi-directional many-to-one association to Lugar
-	@ManyToOne
-	@JoinColumn(name="id_lugar")
-	private Lugar lugar;
 
 	public GrupoTemporal() {
 	}
@@ -80,6 +80,14 @@ public class GrupoTemporal implements Serializable {
 		this.inicioTemporal = inicioTemporal;
 	}
 
+	public Lugar getLugar() {
+		return this.lugar;
+	}
+
+	public void setLugar(Lugar lugar) {
+		this.lugar = lugar;
+	}
+
 	public Ramo getRamo() {
 		return this.ramo;
 	}
@@ -94,14 +102,6 @@ public class GrupoTemporal implements Serializable {
 
 	public void setUsuario(Usuario usuario) {
 		this.usuario = usuario;
-	}
-
-	public Lugar getLugar() {
-		return this.lugar;
-	}
-
-	public void setLugar(Lugar lugar) {
-		this.lugar = lugar;
 	}
 
 }

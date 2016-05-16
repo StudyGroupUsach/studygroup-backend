@@ -16,7 +16,7 @@ public class Carrera implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="carrera_id")
 	private int carreraId;
 
@@ -24,8 +24,8 @@ public class Carrera implements Serializable {
 	@Column(name="nombre_carrera")
 	private String nombreCarrera;
 
-	//bi-directional many-to-many association to Ramo
-	@ManyToMany(mappedBy="carreras")
+	//bi-directional many-to-one association to Ramo
+	@OneToMany(mappedBy="carrera")
 	private List<Ramo> ramos;
 
 	//bi-directional many-to-one association to Usuario
@@ -57,6 +57,20 @@ public class Carrera implements Serializable {
 
 	public void setRamos(List<Ramo> ramos) {
 		this.ramos = ramos;
+	}
+
+	public Ramo addRamo(Ramo ramo) {
+		getRamos().add(ramo);
+		ramo.setCarrera(this);
+
+		return ramo;
+	}
+
+	public Ramo removeRamo(Ramo ramo) {
+		getRamos().remove(ramo);
+		ramo.setCarrera(null);
+
+		return ramo;
 	}
 
 	public List<Usuario> getUsuarios() {

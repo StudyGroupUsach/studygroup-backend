@@ -16,7 +16,7 @@ public class Ramo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="ramo_id")
 	private int ramoId;
 
@@ -32,29 +32,10 @@ public class Ramo implements Serializable {
 	@OneToMany(mappedBy="ramo")
 	private List<GrupoTemporal> grupoTemporals;
 
-	//bi-directional many-to-one association to GrupoHorario
+	//bi-directional many-to-one association to Carrera
 	@ManyToOne
-	@JoinColumns({
-		@JoinColumn(name="grupo_horario_id", referencedColumnName="grupo_horario_id"),
-		@JoinColumn(name="id_lugar", referencedColumnName="id_lugar"),
-		@JoinColumn(name="perfil_ayudante_id", referencedColumnName="perfil_ayudante_id"),
-		@JoinColumn(name="ramo_id", referencedColumnName="ramo_id"),
-		@JoinColumn(name="usuario_id", referencedColumnName="usuario_id")
-		})
-	private GrupoHorario grupoHorario;
-
-	//bi-directional many-to-many association to Carrera
-	@ManyToMany
-	@JoinTable(
-		name="ramos_carrera"
-		, joinColumns={
-			@JoinColumn(name="ramo_id")
-			}
-		, inverseJoinColumns={
-			@JoinColumn(name="carrera_id")
-			}
-		)
-	private List<Carrera> carreras;
+	@JoinColumn(name="carrera_id")
+	private Carrera carrera;
 
 	public Ramo() {
 	}
@@ -119,20 +100,12 @@ public class Ramo implements Serializable {
 		return grupoTemporal;
 	}
 
-	public GrupoHorario getGrupoHorario() {
-		return this.grupoHorario;
+	public Carrera getCarrera() {
+		return this.carrera;
 	}
 
-	public void setGrupoHorario(GrupoHorario grupoHorario) {
-		this.grupoHorario = grupoHorario;
-	}
-
-	public List<Carrera> getCarreras() {
-		return this.carreras;
-	}
-
-	public void setCarreras(List<Carrera> carreras) {
-		this.carreras = carreras;
+	public void setCarrera(Carrera carrera) {
+		this.carrera = carrera;
 	}
 
 }

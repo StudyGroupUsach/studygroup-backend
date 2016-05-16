@@ -15,9 +15,6 @@ public class GrupoHorarioPK implements Serializable {
 	@Column(name="id_lugar", insertable=false, updatable=false)
 	private int idLugar;
 
-	@Column(name="ramo_id", insertable=false, updatable=false)
-	private int ramoId;
-
 	@Column(name="usuario_id", insertable=false, updatable=false)
 	private int usuarioId;
 
@@ -34,12 +31,6 @@ public class GrupoHorarioPK implements Serializable {
 	}
 	public void setIdLugar(int idLugar) {
 		this.idLugar = idLugar;
-	}
-	public int getRamoId() {
-		return this.ramoId;
-	}
-	public void setRamoId(int ramoId) {
-		this.ramoId = ramoId;
 	}
 	public int getUsuarioId() {
 		return this.usuarioId;
@@ -70,7 +61,6 @@ public class GrupoHorarioPK implements Serializable {
 		GrupoHorarioPK castOther = (GrupoHorarioPK)other;
 		return 
 			(this.idLugar == castOther.idLugar)
-			&& (this.ramoId == castOther.ramoId)
 			&& (this.usuarioId == castOther.usuarioId)
 			&& (this.perfilAyudanteId == castOther.perfilAyudanteId)
 			&& (this.grupoHorarioId == castOther.grupoHorarioId);
@@ -80,7 +70,6 @@ public class GrupoHorarioPK implements Serializable {
 		final int prime = 31;
 		int hash = 17;
 		hash = hash * prime + this.idLugar;
-		hash = hash * prime + this.ramoId;
 		hash = hash * prime + this.usuarioId;
 		hash = hash * prime + this.perfilAyudanteId;
 		hash = hash * prime + this.grupoHorarioId;

@@ -3,7 +3,6 @@ package model;
 import java.io.Serializable;
 import javax.persistence.*;
 import java.util.Date;
-import java.util.List;
 
 
 /**
@@ -37,10 +36,10 @@ public class GrupoHorario implements Serializable {
 	@Column(name="tipo_pago")
 	private String tipoPago;
 
-	//bi-directional many-to-one association to Ramo
+	//bi-directional many-to-one association to Lugar
 	@ManyToOne
-	@JoinColumn(name="ramo_id")
-	private Ramo ramo;
+	@JoinColumn(name="id_lugar")
+	private Lugar lugar;
 
 	//bi-directional many-to-one association to PerfilAyudante
 	@ManyToOne
@@ -50,14 +49,10 @@ public class GrupoHorario implements Serializable {
 		})
 	private PerfilAyudante perfilAyudante;
 
-	//bi-directional many-to-one association to Lugar
-	@ManyToOne
-	@JoinColumn(name="id_lugar")
-	private Lugar lugar;
-
 	//bi-directional many-to-one association to Ramo
-	@OneToMany(mappedBy="grupoHorario")
-	private List<Ramo> ramos;
+	@ManyToOne
+	@JoinColumn(name="ramo_id")
+	private Ramo ramo;
 
 	public GrupoHorario() {
 	}
@@ -110,12 +105,12 @@ public class GrupoHorario implements Serializable {
 		this.tipoPago = tipoPago;
 	}
 
-	public Ramo getRamo() {
-		return this.ramo;
+	public Lugar getLugar() {
+		return this.lugar;
 	}
 
-	public void setRamo(Ramo ramo) {
-		this.ramo = ramo;
+	public void setLugar(Lugar lugar) {
+		this.lugar = lugar;
 	}
 
 	public PerfilAyudante getPerfilAyudante() {
@@ -126,34 +121,12 @@ public class GrupoHorario implements Serializable {
 		this.perfilAyudante = perfilAyudante;
 	}
 
-	public Lugar getLugar() {
-		return this.lugar;
+	public Ramo getRamo() {
+		return this.ramo;
 	}
 
-	public void setLugar(Lugar lugar) {
-		this.lugar = lugar;
-	}
-
-	public List<Ramo> getRamos() {
-		return this.ramos;
-	}
-
-	public void setRamos(List<Ramo> ramos) {
-		this.ramos = ramos;
-	}
-
-	public Ramo addRamo(Ramo ramo) {
-		getRamos().add(ramo);
-		ramo.setGrupoHorario(this);
-
-		return ramo;
-	}
-
-	public Ramo removeRamo(Ramo ramo) {
-		getRamos().remove(ramo);
-		ramo.setGrupoHorario(null);
-
-		return ramo;
+	public void setRamo(Ramo ramo) {
+		this.ramo = ramo;
 	}
 
 }
