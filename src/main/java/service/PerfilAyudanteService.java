@@ -16,7 +16,7 @@ import javax.ws.rs.Produces;
 import facade.PerfilAyudanteFacade;
 import model.PerfilAyudante;
 
-@Path("/perfiles_ayudantes_pk")
+@Path("/perfiles_ayudantes")
 public class PerfilAyudanteService {
 	
 	@EJB 

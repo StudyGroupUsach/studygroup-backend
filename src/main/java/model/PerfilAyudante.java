@@ -32,7 +32,7 @@ public class PerfilAyudante implements Serializable {
 	//bi-directional one-to-one association to Usuario
 	@OneToOne
 	@JoinColumn(name="usuario_id")
-	private Usuario usuario1;
+	private Usuario usuario;
 
 	public PerfilAyudante() {
 	}
@@ -83,12 +83,12 @@ public class PerfilAyudante implements Serializable {
 		return grupoHorario;
 	}
 
-	public Usuario getUsuario1() {
-		return this.usuario1;
+	public Usuario getUsuario() {
+		return this.usuario;
 	}
 
-	public void setUsuario1(Usuario usuario1) {
-		this.usuario1 = usuario1;
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
 	}
 
 }

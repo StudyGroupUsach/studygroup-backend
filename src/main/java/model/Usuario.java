@@ -39,7 +39,7 @@ public class Usuario implements Serializable {
 	private List<GrupoTemporal> grupoTemporals;
 
 	//bi-directional one-to-one association to PerfilAyudante
-	@OneToOne(mappedBy="usuario1")
+	@OneToOne(mappedBy="usuario")
 	private PerfilAyudante perfilAyudante;
 
 	//bi-directional many-to-one association to Carrera
