@@ -15,8 +15,10 @@ import java.util.List;
 public class PerfilAyudante implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	@EmbeddedId
-	private PerfilAyudantePK id;
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name="perfil_ayudante_id")
+	private int perfilAyudanteId;
 
 	private String estado;
 
@@ -27,20 +29,20 @@ public class PerfilAyudante implements Serializable {
 	@OneToMany(mappedBy="perfilAyudante")
 	private List<GrupoHorario> grupoHorarios;
 
-	//bi-directional many-to-one association to Usuario
-	@ManyToOne
+	//bi-directional one-to-one association to Usuario
+	@OneToOne
 	@JoinColumn(name="usuario_id")
-	private Usuario usuario;
+	private Usuario usuario1;
 
 	public PerfilAyudante() {
 	}
 
-	public PerfilAyudantePK getId() {
-		return this.id;
+	public int getPerfilAyudanteId() {
+		return this.perfilAyudanteId;
 	}
 
-	public void setId(PerfilAyudantePK id) {
-		this.id = id;
+	public void setPerfilAyudanteId(int perfilAyudanteId) {
+		this.perfilAyudanteId = perfilAyudanteId;
 	}
 
 	public String getEstado() {
@@ -81,12 +83,12 @@ public class PerfilAyudante implements Serializable {
 		return grupoHorario;
 	}
 
-	public Usuario getUsuario() {
-		return this.usuario;
+	public Usuario getUsuario1() {
+		return this.usuario1;
 	}
 
-	public void setUsuario(Usuario usuario) {
-		this.usuario = usuario;
+	public void setUsuario1(Usuario usuario1) {
+		this.usuario1 = usuario1;
 	}
 
 }

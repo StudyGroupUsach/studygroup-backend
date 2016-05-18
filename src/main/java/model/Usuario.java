@@ -32,13 +32,15 @@ public class Usuario implements Serializable {
 	@Column(name="numero_movil")
 	private String numeroMovil;
 
+	private String pass;
+
 	//bi-directional many-to-one association to GrupoTemporal
 	@OneToMany(mappedBy="usuario")
 	private List<GrupoTemporal> grupoTemporals;
 
-	//bi-directional many-to-one association to PerfilAyudante
-	@OneToMany(mappedBy="usuario")
-	private List<PerfilAyudante> perfilAyudantes;
+	//bi-directional one-to-one association to PerfilAyudante
+	@OneToOne(mappedBy="usuario1")
+	private PerfilAyudante perfilAyudante;
 
 	//bi-directional many-to-one association to Carrera
 	@ManyToOne
@@ -96,6 +98,14 @@ public class Usuario implements Serializable {
 		this.numeroMovil = numeroMovil;
 	}
 
+	public String getPass() {
+		return this.pass;
+	}
+
+	public void setPass(String pass) {
+		this.pass = pass;
+	}
+
 	public List<GrupoTemporal> getGrupoTemporals() {
 		return this.grupoTemporals;
 	}
@@ -118,26 +128,12 @@ public class Usuario implements Serializable {
 		return grupoTemporal;
 	}
 
-	public List<PerfilAyudante> getPerfilAyudantes() {
-		return this.perfilAyudantes;
+	public PerfilAyudante getPerfilAyudante() {
+		return this.perfilAyudante;
 	}
 
-	public void setPerfilAyudantes(List<PerfilAyudante> perfilAyudantes) {
-		this.perfilAyudantes = perfilAyudantes;
-	}
-
-	public PerfilAyudante addPerfilAyudante(PerfilAyudante perfilAyudante) {
-		getPerfilAyudantes().add(perfilAyudante);
-		perfilAyudante.setUsuario(this);
-
-		return perfilAyudante;
-	}
-
-	public PerfilAyudante removePerfilAyudante(PerfilAyudante perfilAyudante) {
-		getPerfilAyudantes().remove(perfilAyudante);
-		perfilAyudante.setUsuario(null);
-
-		return perfilAyudante;
+	public void setPerfilAyudante(PerfilAyudante perfilAyudante) {
+		this.perfilAyudante = perfilAyudante;
 	}
 
 	public Carrera getCarrera() {

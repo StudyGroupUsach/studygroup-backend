@@ -16,8 +16,10 @@ import java.util.Date;
 public class GrupoTemporal implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	@EmbeddedId
-	private GrupoTemporalPK id;
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name="grupo_temporal_id")
+	private int grupoTemporalId;
 
 	@Lob
 	@Column(name="descripcion_temporal")
@@ -48,12 +50,12 @@ public class GrupoTemporal implements Serializable {
 	public GrupoTemporal() {
 	}
 
-	public GrupoTemporalPK getId() {
-		return this.id;
+	public int getGrupoTemporalId() {
+		return this.grupoTemporalId;
 	}
 
-	public void setId(GrupoTemporalPK id) {
-		this.id = id;
+	public void setGrupoTemporalId(int grupoTemporalId) {
+		this.grupoTemporalId = grupoTemporalId;
 	}
 
 	public String getDescripcionTemporal() {

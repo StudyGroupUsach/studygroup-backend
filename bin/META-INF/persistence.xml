@@ -6,13 +6,11 @@
 		<jta-data-source>jdbc/studygroup</jta-data-source>
 		<class>model.Carrera</class>
 		<class>model.GrupoHorario</class>
-		<class>model.GrupoHorarioPK</class>
 		<class>model.GrupoTemporal</class>
-		<class>model.GrupoTemporalPK</class>
 		<class>model.Lugar</class>
 		<class>model.PerfilAyudante</class>
-		<class>model.PerfilAyudantePK</class>
 		<class>model.Ramo</class>
 		<class>model.Usuario</class>
+		<exclude-unlisted-classes>false</exclude-unlisted-classes>
 	</persistence-unit>
 </persistence>

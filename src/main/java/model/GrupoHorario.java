@@ -15,8 +15,10 @@ import java.util.Date;
 public class GrupoHorario implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	@EmbeddedId
-	private GrupoHorarioPK id;
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name="grupo_horario_id")
+	private int grupoHorarioId;
 
 	@Lob
 	@Column(name="descripcion_horario")
@@ -36,6 +38,9 @@ public class GrupoHorario implements Serializable {
 	@Column(name="tipo_pago")
 	private String tipoPago;
 
+	@Column(name="usuario_id")
+	private int usuarioId;
+
 	//bi-directional many-to-one association to Lugar
 	@ManyToOne
 	@JoinColumn(name="id_lugar")
@@ -43,10 +48,7 @@ public class GrupoHorario implements Serializable {
 
 	//bi-directional many-to-one association to PerfilAyudante
 	@ManyToOne
-	@JoinColumns({
-		@JoinColumn(name="perfil_ayudante_id", referencedColumnName="perfil_ayudante_id"),
-		@JoinColumn(name="usuario_id", referencedColumnName="usuario_id")
-		})
+	@JoinColumn(name="perfil_ayudante_id")
 	private PerfilAyudante perfilAyudante;
 
 	//bi-directional many-to-one association to Ramo
@@ -57,12 +59,12 @@ public class GrupoHorario implements Serializable {
 	public GrupoHorario() {
 	}
 
-	public GrupoHorarioPK getId() {
-		return this.id;
+	public int getGrupoHorarioId() {
+		return this.grupoHorarioId;
 	}
 
-	public void setId(GrupoHorarioPK id) {
-		this.id = id;
+	public void setGrupoHorarioId(int grupoHorarioId) {
+		this.grupoHorarioId = grupoHorarioId;
 	}
 
 	public String getDescripcionHorario() {
@@ -103,6 +105,14 @@ public class GrupoHorario implements Serializable {
 
 	public void setTipoPago(String tipoPago) {
 		this.tipoPago = tipoPago;
+	}
+
+	public int getUsuarioId() {
+		return this.usuarioId;
+	}
+
+	public void setUsuarioId(int usuarioId) {
+		this.usuarioId = usuarioId;
 	}
 
 	public Lugar getLugar() {
