@@ -13,12 +13,11 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 
-import com.mongodb.util.JSON;
-
 import facade.RamoFacade;
 import model.Ramo;
 import facade.CarreraFacade;
 import model.Carrera;
+import adapters.ListSerializer;
 
 @Path("/gestion_carreras")
 public class GestionCarreraService {
@@ -34,18 +33,23 @@ public class GestionCarreraService {
 	//REST Carrera
 	
 	@GET
-	@Produces({"application/xml", "application/json"})
-	public List<Carrera> findAllCarreras(){
+	@Produces({"application/json"})
+	public String findAllCarreras(){
 	//public String findAllCarreras(){
 	//	return JSON.serialize(carreraFacadeEJB.findAll());
-		return carreraFacadeEJB.findAll();
+		List<Carrera> carreras = carreraFacadeEJB.findAll(); 
+	//	ArrayList<Carrera>  carrerasAsArray = new ArrayList<>(carreras.size());
+	//	carrerasAsArray = (ArrayList<Carrera>) carreras;
+		ListSerializer serializer = new ListSerializer();
+		return serializer.CarreraListSerializer(carreras);
 	}
 	
 	@GET
     @Path("{id}")
-    @Produces({"application/xml", "application/json"})
-    public Carrera findCarrera(@PathParam("id") Integer id) {
-        return carreraFacadeEJB.find(id);
+    @Produces({"application/json"})
+    public String findCarrera(@PathParam("id") Integer id) {
+		ListSerializer serializer = new ListSerializer();
+		return serializer.CarreraSerializer(carreraFacadeEJB.find(id));
     }
 	
 	@POST
@@ -89,18 +93,43 @@ public class GestionCarreraService {
     
     //REST Ramo
     
+    
 	@GET
     @Path("/ramos")
-	@Produces({"application/xml", "application/json"})
-	public List<Ramo> findAllRamos(){
-		return ramoFacadeEJB.findAll();
+	@Produces({"application/json"})
+	//public List<Ramo> findAllRamos(){
+	public String findAllRamos(){
+		ListSerializer serializer = new ListSerializer();
+		//JSONObject json = new JSONObject(serializer.RamoListSerializer(ramoFacadeEJB.findAll()));
+		//return JSON.serialize(serializer.RamoListSerializer(ramoFacadeEJB.findAll()));
+		return serializer.RamoListSerializer(ramoFacadeEJB.findAll());
+		//return ramoFacadeEJB.findAll();
 	}
 	
+    
+    /*
+    @GET
+    @Path("/ramos")
+	@Produces({"application/json"})
+	//public List<Ramo> findAllRamos(){
+	public ArrayList<Ramo> findAllRamos(){
+    	List<Ramo> ramosLista = ramoFacadeEJB.findAll();
+    	ArrayList<Ramo> ramos = new ArrayList<Ramo>();
+    	for (int i = 0; i<ramosLista.size(); i++){
+    		ramos.add(ramosLista.get(i));
+    	}
+		return ramos;
+	}
+	*/
+    
 	@GET
     @Path("/ramos/{id}")
     @Produces({"application/xml", "application/json"})
-    public Ramo findRamo(@PathParam("id") Integer id) {
-        return ramoFacadeEJB.find(id);
+    public String findRamo(@PathParam("id") Integer id) {
+		ListSerializer serializer = new ListSerializer();
+		String result = serializer.RamoSerializer(ramoFacadeEJB.find(id));
+		return result;
+		//return ramoFacadeEJB.find(id);
     }
 	
 	@POST
@@ -119,8 +148,11 @@ public class GestionCarreraService {
     @Path("/ramo/{id}")
     @Consumes({"application/xml", "application/json"})
     public void editRamo(@PathParam("id") Integer id, Ramo entity) {
-    	entity.setRamoId(id.intValue());
-        ramoFacadeEJB.edit(entity);
+    	if (entity.getNombreRamo() != null || ramoFacadeEJB.find(id) != null){
+    		entity.setRamoId(id.intValue());
+    		entity.setCarrera(ramoFacadeEJB.find(id).getCarrera());
+    		ramoFacadeEJB.edit(entity);
+    	}
     }
     
     @DELETE
