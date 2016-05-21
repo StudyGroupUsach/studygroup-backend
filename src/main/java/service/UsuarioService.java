@@ -13,8 +13,12 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 
+//import com.mongodb.util.JSON;
+
+import adapters.ListSerializer;
 import facade.UsuarioFacade;
 import model.Usuario;
+import facade.CarreraFacade;
 
 //Dependencias adicionales para hash MD5 en la contrasena
 import java.math.BigInteger;
@@ -27,24 +31,37 @@ public class UsuarioService {
 	@EJB 
 	UsuarioFacade usuarioFacadeEJB;
 	
+	@EJB
+	CarreraFacade carreraFacadeEJB;
+	
 	Logger logger = Logger.getLogger(UsuarioService.class.getName());
 	
 	@GET
-	@Produces({"application/xml", "application/json"})
-	public List<Usuario> findAll(){
-		return usuarioFacadeEJB.findAll();
+	@Produces({"application/json"})
+	//public List<Usuario> findAll(){
+	public String findAll(){
+		ListSerializer serializer = new ListSerializer();
+		String result = serializer.UsuarioListSerializer(usuarioFacadeEJB.findAll());
+		return result;
+		//return usuarioFacadeEJB.findAll();
 	}
 	
 	@GET
     @Path("{id}")
-    @Produces({"application/xml", "application/json"})
-    public Usuario find(@PathParam("id") Integer id) {
-        return usuarioFacadeEJB.find(id);
+    @Produces({"application/json"})
+    //public Usuario find(@PathParam("id") Integer id) {
+	public String find(@PathParam("id") Integer id) {
+		ListSerializer serializer = new ListSerializer();
+		String result = serializer.UsuarioSerializer(usuarioFacadeEJB.find(id));
+		return result;
+        //return usuarioFacadeEJB.find(id);
     }
 	
 	@POST
     @Consumes({"application/xml", "application/json"})
-    public void create(Usuario entity) {
+	@Produces({"application/json"})
+	//@Produces("text/plain")
+    public String create(Usuario entity) {
 		//
 		boolean mailExist = false;
 		
@@ -74,21 +91,35 @@ public class UsuarioService {
 			//print something
 		}
 		else if(entity.getApellidos() == null || entity.getMail() == null 
-				|| entity.getNombre() == null || entity.getPass() == null ){
+				|| entity.getNombre() == null || entity.getPass() == null 
+				|| entity.getCarrera() == null){
 			//logger.finer("Null, user:"+entity.getNombre() +" -->Mail:"+entity.getMail());
-		}	
+		}
+		else if(entity.getCarrera().getCarreraId() == 0){
+			
+		}
 		else if(part.length == 2){
 			//Verificar que cumple con el formato @usach.cl
 			if(part[1].equals("usach.cl")){
 				//Anadimos una password
 				entity.setPass(md5(pass));
 				
-				//Crear usuario a la Base de datos
-				usuarioFacadeEJB.create(entity);
+				//Para agregar la carrera
+				int carreraId = entity.getCarrera().getCarreraId();
+				if (carreraFacadeEJB.find(carreraId) != null){
+					entity.setCarrera(carreraFacadeEJB.find(entity.getCarrera().getCarreraId()));
+					
+					//Crear usuario a la Base de datos
+					usuarioFacadeEJB.create(entity);
+					//return JSON.serialize(true);
+					return "{ \"usuarioAgregado\":\"true\"}";
+				}
 			}
 			
 		}
 		
+		//return JSON.serialize(false);
+		return "{ \"usuarioAgregado\":\"false\"}";		
     }
 
     @PUT
@@ -120,6 +151,12 @@ public class UsuarioService {
     	}else//Pass es distinto al pass anterior
     	{
     		entity.setPass(md5(entity.getPass()));
+    	}
+    	if (entity.getCarrera() == null){
+    		entity.setCarrera(original.getCarrera());
+    	} else 
+    	{
+    		entity.setCarrera(carreraFacadeEJB.find(entity.getCarrera().getCarreraId()));
     	}
     	
         usuarioFacadeEJB.edit(entity);

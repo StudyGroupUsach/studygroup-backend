@@ -5,22 +5,22 @@ URL Service:
 -http://mongostudygroup-app4tbd.rhcloud.com/service
 
 Para acceso a Carreras:
-http://mongostudygroup-app4tbd.rhcloud.com/studygroup-backend/gestion_carreras/
+http://mongostudygroup-app4tbd.rhcloud.com/service/gestion_carreras/
 
 GET: Consultar todas las carreras
-http://mongostudygroup-app4tbd.rhcloud.com/studygroup-backend/gestion_carreras/
+http://mongostudygroup-app4tbd.rhcloud.com/service/gestion_carreras/
 
 GET: Consultar una carrera por ID
-http://mongostudygroup-app4tbd.rhcloud.com/studygroup-backend/gestion_carreras/ID
+http://mongostudygroup-app4tbd.rhcloud.com/service/gestion_carreras/ID
 
 GET: Consultar todos los ramos
-http://mongostudygroup-app4tbd.rhcloud.com/studygroup-backend/gestion_carreras/ramos
+http://mongostudygroup-app4tbd.rhcloud.com/service/gestion_carreras/ramos
 
 GET: Consultar un ramo por ID
-http://mongostudygroup-app4tbd.rhcloud.com/studygroup-backend/gestion_carreras/ramos/ID
+http://mongostudygroup-app4tbd.rhcloud.com/service/gestion_carreras/ramos/ID
 
 POST: Agregar Carrera //Administración
-http://mongostudygroup-app4tbd.rhcloud.com/studygroup-backend/gestion_carreras/
+http://mongostudygroup-app4tbd.rhcloud.com/service/gestion_carreras/
 
 Requiere un JSON del modo:
 
@@ -30,7 +30,7 @@ Requiere un JSON del modo:
 
 
 POST: Agregar un Ramo de una Carrera.
-http://mongostudygroup-app4tbd.rhcloud.com/studygroup-backend/gestion_carreras/carreras/ID
+http://mongostudygroup-app4tbd.rhcloud.com/service/gestion_carreras/carreras/ID
 
 El ID es el de la carrera a la que pertenece el ramo a utilizar.
 
@@ -43,7 +43,7 @@ Requiere un JSON del modo:
 El post solo funcionará si es que el id de carrera existe.
 
 PUT: Modificación de un ramo, a partir de la ID del ramo
-http://mongostudygroup-app4tbd.rhcloud.com/studygroup-backend/gestion_carreras/ramos/ID
+http://mongostudygroup-app4tbd.rhcloud.com/service/gestion_carreras/ramos/ID
 
 {
 "nombreRamo":"Nombre.del.Ramo"
@@ -55,17 +55,21 @@ Verificar no enviar un put con un null.
 Desde este punto son solo para testing y no estarán en la versión final.
 
 PUT: Modificación de una carrera
-http://mongostudygroup-app4tbd.rhcloud.com/studygroup-backend/gestion_carreras/ID
+http://mongostudygroup-app4tbd.rhcloud.com/service/gestion_carreras/ID
 
 DELETE: Eliminación de una carrera
-http://mongostudygroup-app4tbd.rhcloud.com/studygroup-backend/gestion_carreras/ID
+http://mongostudygroup-app4tbd.rhcloud.com/service/gestion_carreras/ID
 
 
 DELETE: Eliminación de un ramo
-http://mongostudygroup-app4tbd.rhcloud.com/studygroup-backend/gestion_carreras/ramo/ID
+http://mongostudygroup-app4tbd.rhcloud.com/service/gestion_carreras/ramo/ID
 
+Desde este punto las funciones se encuentran solo en 
+http://mongostudygroup-app4tbd.rhcloud.com/testing
 
-
+GET: Encontrar ramos de la carrera de un usuario
+http://mongostudygroup-app4tbd.rhcloud.com/testing/gestion_carreras/usuario/ID
+Donde el ID es el id del usuario del que quiero saber que ramos puede elegir para estudiar
 
 Url Base
 -http://mongostudygroup-app4tbd.rhcloud.com/service/usuarios
@@ -96,6 +100,18 @@ Argumentos:"{"apellidos":"Banana","descripcion":"Esta descripción es opcional",
 Nota , no sé puede ingresar el mismo mail una vez que se ingresa un usuario, ya 
 que el sistema lo rechaza, el nombre los apellidos, mail y pass son obligatorios
 de lo contrario no se crea el Usuario
+
+Para agregar usuarios con carrera deben hacerlo de la siguiente forma, temporalmente dicha forma solo esta permitida en la app testing, es decir http://mongostudygroup-app4tbd.rhcloud.com/testing/usuarios :
+ {
+    "apellidos": "Perez",
+    "descripcion": "Estudiante de informatica.",
+    "mail": "juan.perez@usach.cl",
+    "nombre": "Juan",
+    "numeroMovil": "9988000",
+    "carrera" : { "carreraId": "10" },
+    "pass": "prueba"
+  }
+
 
 ################################################################################
 Eliminar Usuarios del sistema(DELETE)
@@ -136,3 +152,4 @@ Happy Work , espero hacer el login pronto ya que tuve problemas , pero.. estoy
 muriendo ... así que denme tiempo por que ya queda poco, en el sentido de que 
 parece que cada vez son menos los problemas con java EE, aunque no deja de 
 sorprenderme que tan bugeado puede ser este framework....
+

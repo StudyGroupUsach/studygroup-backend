@@ -17,6 +17,8 @@ import facade.RamoFacade;
 import model.Ramo;
 import facade.CarreraFacade;
 import model.Carrera;
+import facade.UsuarioFacade;
+import model.Usuario;
 import adapters.ListSerializer;
 
 @Path("/gestion_carreras")
@@ -27,6 +29,9 @@ public class GestionCarreraService {
 	
 	@EJB
 	CarreraFacade carreraFacadeEJB;
+	
+	@EJB
+	UsuarioFacade usuarioFacadeEJB;
 	
 	Logger logger = Logger.getLogger(GestionCarreraService.class.getName());
 
@@ -124,7 +129,7 @@ public class GestionCarreraService {
     
 	@GET
     @Path("/ramos/{id}")
-    @Produces({"application/xml", "application/json"})
+    @Produces({"application/json"})
     public String findRamo(@PathParam("id") Integer id) {
 		ListSerializer serializer = new ListSerializer();
 		String result = serializer.RamoSerializer(ramoFacadeEJB.find(id));
@@ -161,4 +166,24 @@ public class GestionCarreraService {
     	Ramo ramo = ramoFacadeEJB.find(id); 
     	ramoFacadeEJB.remove(ramo);
     }
+    
+    // REST relacionado a Usuario
+    
+	@GET
+    @Path("/usuario/{id}")
+    @Produces({"application/json"})
+    public String findRamosUsuario(@PathParam("id") Integer id) {
+		ListSerializer serializer = new ListSerializer();
+		Usuario usuario = usuarioFacadeEJB.find(id);
+		
+		if (usuario != null){
+			if (usuario.getCarrera() != null){
+				String result = serializer.RamoListSerializer(usuario.getCarrera().getRamos());
+				return result;
+			}
+		}
+		return "[]";
+		//return ramoFacadeEJB.find(id);
+    }
+    
 }
