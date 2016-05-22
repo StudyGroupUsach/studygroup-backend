@@ -22,15 +22,19 @@ import com.mongodb.util.JSON;
 
 import model.Ramo;
 import model.Usuario;
+import facade.RamoFacade;
 import facade.CarreraFacade;
 import facade.UsuarioFacade;
 import mongo.MongoEJB;
 
-@Path("/gestion_carreras")
+@Path("/gestion_relacion_usuarios")
 public class GestionRelacionUsuariosService {
 	
 	@EJB 
 	UsuarioFacade usuarioFacadeEJB;
+	
+	@EJB
+	RamoFacade ramoFacadeEJB;
 	
 	@EJB
 	CarreraFacade carreraFacadeEJB;
@@ -41,7 +45,7 @@ public class GestionRelacionUsuariosService {
 	//Personas con las que puede hacer un grupo, segun su listado de ramos de preferencia
 	
 	@GET
-	@Path("/{id}")
+	@Path("/grupo_estudio/{id}")
 	@Produces({"application/json"})
 	public String getusuariosConLosQueHacerGrupo(@PathParam("id") Integer id){
 		Usuario usuario = usuarioFacadeEJB.find(id);
@@ -49,8 +53,20 @@ public class GestionRelacionUsuariosService {
 			MongoClient mongoClient = mongoEJB.getMongoClient();
 			MongoDatabase database = mongoClient.getDatabase("mongostudygroup");
 			MongoCollection<Document> collection = database.getCollection("usuario.preferencias");
-			Document foundDocument = collection.find(Filters.eq("usuarioId",id+"")).first();
+
+			List<Document> foundDocument = collection.find(Filters.eq("usuarioId",id+"")).into(new ArrayList<Document>());
+			
 			if (!foundDocument.isEmpty()){
+				Document doc = foundDocument.get(0);
+//				return "{ \"hell\": \"yeah\"}";
+				List <Ramo> aux = ramoFacadeEJB.findAll();
+				//doc.get("ramo", aux.getClass());
+				Object ob = doc.get("ramo");
+				ArrayList<Ramo> ramos = (ArrayList<Ramo>)ob;
+				
+				
+				return JSON.serialize(ramos.get(0));
+				//return doc.get("ramo",aux.getClass()).toString();
 			}
 		}
 		return "[ ]";
