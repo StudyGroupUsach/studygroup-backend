@@ -33,6 +33,7 @@ public class LoginService {
 
 	@POST
     @Consumes({"application/xml", "application/json"})
+	@Produces({"application/json"})
     public boolean login(Usuario entity) {
 		boolean loginUser = false;
 

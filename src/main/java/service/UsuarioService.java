@@ -1,5 +1,6 @@
 package service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -13,12 +14,23 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 
+//Dependencias para Mongo
+
+import org.bson.Document;
+import com.mongodb.MongoClient;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Filters;
+import com.mongodb.util.JSON;
+
 //import com.mongodb.util.JSON;
 
 import adapters.ListSerializer;
 import facade.UsuarioFacade;
+import model.Ramo;
 import model.Usuario;
 import facade.CarreraFacade;
+import mongo.MongoEJB;
 
 //Dependencias adicionales para hash MD5 en la contrasena
 import java.math.BigInteger;
@@ -33,6 +45,9 @@ public class UsuarioService {
 	
 	@EJB
 	CarreraFacade carreraFacadeEJB;
+	
+	@EJB
+	MongoEJB mongoEJB;
 	
 	Logger logger = Logger.getLogger(UsuarioService.class.getName());
 	
@@ -194,6 +209,117 @@ public class UsuarioService {
         return md5;
     }
     
-	
+    @GET
+	@Path("/{id}/ramos")
+    @Produces({"application/json"})
+	public String ramosSeleccionados(@PathParam("id") Integer id){
+		MongoClient mongoClient = mongoEJB.getMongoClient();
+		MongoDatabase database = mongoClient.getDatabase("mongostudygroup");
+		MongoCollection<Document> collection = database.getCollection("usuario.preferencias");
+		List<Document> foundDocument = collection.find(Filters.eq("usuarioId",id+"")).into(new ArrayList<Document>());
+		mongoClient.close();
+		return JSON.serialize(foundDocument);
+	}
+    
+    @GET
+	@Path("/ramos")
+    @Produces({"application/json"})
+	public String ramosSeleccionadosUsuarios(@PathParam("id") Integer id){
+		MongoClient mongoClient = mongoEJB.getMongoClient();
+		MongoDatabase database = mongoClient.getDatabase("mongostudygroup");
+		MongoCollection<Document> collection = database.getCollection("usuario.preferencias");
+		List<Document> foundDocument = collection.find().into(new ArrayList<Document>());
+		mongoClient.close();
+		return JSON.serialize(foundDocument);
+	}          
 
+    
+    @POST
+	@Path("/{id}/ramos")
+    @Consumes({"application/xml", "application/json"})
+    @Produces({"application/json"})
+	public String addRamosSeleccionados(List<Ramo> entity,@PathParam("id") Integer id){
+		Usuario usuario = usuarioFacadeEJB.find(id);
+		if (usuario != null){
+			MongoClient mongoClient = mongoEJB.getMongoClient();
+			MongoDatabase database = mongoClient.getDatabase("mongostudygroup");
+			MongoCollection<Document> collection = database.getCollection("usuario.preferencias");
+			List<Document> foundDocument = collection.find(Filters.eq("usuarioId",id+"")).into(new ArrayList<Document>());
+			if (foundDocument.isEmpty()){
+
+			Document doc = new Document ("usuarioId", id+"");
+			
+			List<Document> docRamos = new ArrayList<Document>();
+			for (int i = 0; i<entity.size();i++){
+				Ramo ramo = entity.get(i);
+				if (ramo != null){
+					if(ramo.getCarrera() != null){
+						Document aux = new Document ("nombreRamo", ramo.getNombreRamo())
+								.append("ramoId", ramo.getRamoId()+"")
+								.append("carreraId", ramo.getCarrera().getCarreraId()+"")
+								.append("nombreCarrera", ramo.getCarrera().getNombreCarrera());
+						docRamos.add(aux);
+					}
+				}
+			}
+			doc.append("ramo", docRamos);
+			collection.insertOne(doc);
+			mongoClient.close();
+			return JSON.serialize(doc);
+			}
+		}
+		return "[ ]";
+	}
+    
+    @PUT
+	@Path("/{id}/ramos")
+    @Consumes({"application/xml", "application/json"})
+    @Produces({"application/json"})
+	public String editRamosSeleccionados(List<Ramo> entity,@PathParam("id") Integer id){
+		Usuario usuario = usuarioFacadeEJB.find(id);
+		if (usuario != null){
+			MongoClient mongoClient = mongoEJB.getMongoClient();
+			MongoDatabase database = mongoClient.getDatabase("mongostudygroup");
+			MongoCollection<Document> collection = database.getCollection("usuario.preferencias");
+			List<Document> foundDocument = collection.find(Filters.eq("usuarioId",id+"")).into(new ArrayList<Document>());
+			if (!foundDocument.isEmpty()){
+
+			Document doc = new Document ("usuarioId", id+"");
+			
+			List<Document> docRamos = new ArrayList<Document>();
+			for (int i = 0; i<entity.size();i++){
+				Ramo ramo = entity.get(i);
+				if (ramo != null){
+					if(ramo.getCarrera() != null){
+						Document aux = new Document ("nombreRamo", ramo.getNombreRamo())
+								.append("ramoId", ramo.getRamoId()+"")
+								.append("carreraId", ramo.getCarrera().getCarreraId()+"")
+								.append("nombreCarrera", ramo.getCarrera().getNombreCarrera());
+						docRamos.add(aux);
+					}
+				}
+			}
+			doc.append("ramo", docRamos);
+			collection.findOneAndReplace(Filters.eq("usuarioId", id+""), doc);
+			mongoClient.close();
+			return JSON.serialize(doc);
+			}
+		}
+		return "[ ]";
+	}
+    
+    @DELETE
+	@Path("/{id}/ramos")
+    @Produces({"application/xml", "application/json"})
+	public void deleteRamosSeleccionados(@PathParam("id") Integer id){
+    	if (usuarioFacadeEJB.find(id) == null){
+    		MongoClient mongoClient = mongoEJB.getMongoClient();
+			MongoDatabase database = mongoClient.getDatabase("mongostudygroup");
+			MongoCollection<Document> collection = database.getCollection("usuario.preferencias");
+			collection.findOneAndDelete(Filters.eq("usuarioId",id+""));
+			mongoClient.close();
+    	}
+	}
+    
+    
 }

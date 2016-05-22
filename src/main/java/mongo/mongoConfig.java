@@ -11,7 +11,7 @@ public class mongoConfig {
 	
 	public mongoConfig(){
 		this.user = "admin";
-		this.password = "VC8tvNP64pQP";
+		this.password = "I1aPBBqdCq1i";
 		this.url = "127.0.0.1";
 		this.port = "27017";
 	}
