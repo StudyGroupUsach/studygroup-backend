@@ -59,13 +59,22 @@ public class GestionRelacionUsuariosService {
 			if (!foundDocument.isEmpty()){
 				Document doc = foundDocument.get(0);
 //				return "{ \"hell\": \"yeah\"}";
-				List <Ramo> aux = ramoFacadeEJB.findAll();
 				//doc.get("ramo", aux.getClass());
 				Object ob = doc.get("ramo");
 				ArrayList<Ramo> ramos = (ArrayList<Ramo>)ob;
+				foundDocument = collection.find(Filters.in("ramo", ramos)).into(new ArrayList<Document>());
+				List<Document> usuarios = new ArrayList<Document>();
+				for (int i = 0; i < foundDocument.size(); i++){
+					Document aux = foundDocument.get(i);
+					if (!aux.get("usuarioId").equals(id+"")){
+						usuarios.add(aux);
+					}
+				}
+				Document result = new Document("usuarioId", id).append("usuario", usuarios);
 				
-				
-				return JSON.serialize(ramos.get(0));
+				//return JSON.serialize(ramos.get(0));
+				mongoClient.close();
+				return JSON.serialize(result);
 				//return doc.get("ramo",aux.getClass()).toString();
 			}
 		}
@@ -96,7 +105,7 @@ public class GestionRelacionUsuariosService {
 			MongoClient mongoClient = mongoEJB.getMongoClient();
 			MongoDatabase database = mongoClient.getDatabase("mongostudygroup");
 			MongoCollection<Document> collection = database.getCollection("usuario.previosEncuentros");
-			List<Document> foundDocument = collection.find(Filters.eq("usuarioId",id+"")).into(new ArrayList<Document>());
+			//List<Document> foundDocument = collection.find(Filters.eq("usuarioId",id+"")).into(new ArrayList<Document>());
 			//if (foundDocument.isEmpty()){ //No se habilitara actualizacion, solo POST
 
 			Document doc = new Document ("usuarioId", id+"");
@@ -113,13 +122,12 @@ public class GestionRelacionUsuariosService {
 						docUsuarios.add(aux);
 					}
 				}
-			//}
+			}
 			doc.append("ramo", docUsuarios);
 			//collection.insertOne(doc);
 			collection.findOneAndReplace(Filters.eq("usuarioId",id+""), doc);
 			mongoClient.close();
 			return JSON.serialize(doc);
-			}
 		}
 		return "[ ]";
 	}
