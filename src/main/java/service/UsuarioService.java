@@ -98,7 +98,7 @@ public class UsuarioService {
 					mailExist = true;
 					i = usuarios.size();
 				}
-			}		
+			}
 		}
 		
 		if(mailExist)
@@ -310,15 +310,17 @@ public class UsuarioService {
     
     @DELETE
 	@Path("/{id}/ramos")
-    @Produces({"application/xml", "application/json"})
-	public void deleteRamosSeleccionados(@PathParam("id") Integer id){
+    @Produces({"application/json"})
+	public String deleteRamosSeleccionados(@PathParam("id") Integer id){
     	if (usuarioFacadeEJB.find(id) == null){
     		MongoClient mongoClient = mongoEJB.getMongoClient();
 			MongoDatabase database = mongoClient.getDatabase("mongostudygroup");
 			MongoCollection<Document> collection = database.getCollection("usuario.preferencias");
 			collection.findOneAndDelete(Filters.eq("usuarioId",id+""));
 			mongoClient.close();
+			return "{\"historialUsuarioEliminado\":\"" + "true" +  "\"}";
     	}
+		return "{\"historialUsuarioEliminado\":\"" + "false" +  "\"}";
 	}
     
     

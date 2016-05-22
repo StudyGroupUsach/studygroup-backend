@@ -34,18 +34,21 @@ public class LoginService {
 	@POST
     @Consumes({"application/xml", "application/json"})
 	@Produces({"application/json"})
-    public boolean login(Usuario entity) {
+    public String login(Usuario entity) {
 		boolean loginUser = false;
-
+		int id = 0;
 		if( !aFieldIsNull(entity) ){
 			Usuario queryUser = getUser(entity.getMail());
 
 			if(queryUser != null){
 				loginUser = logUser(entity,queryUser);
+				if (loginUser){
+					id = queryUser.getUsuarioId();
+				}
 			}
 		}
-		return loginUser;
-
+		return "{\"usuarioId\":\""+ id + "\", "+ "\"usuarioConectado\":\"" + loginUser +  "\"}";
+		//return loginUser;
     }
 
 
