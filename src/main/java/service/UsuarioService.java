@@ -1,6 +1,7 @@
 package service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -17,6 +18,8 @@ import javax.ws.rs.Produces;
 //Dependencias para Mongo
 
 import org.bson.Document;
+
+import com.mongodb.BasicDBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
@@ -36,6 +39,8 @@ import mongo.MongoEJB;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 @Path("/usuarios")
 public class UsuarioService {
@@ -217,7 +222,7 @@ public class UsuarioService {
 		MongoDatabase database = mongoClient.getDatabase("mongostudygroup");
 		MongoCollection<Document> collection = database.getCollection("usuario.preferencias");
 		List<Document> foundDocument = collection.find(Filters.eq("usuarioId",id+"")).into(new ArrayList<Document>());
-		mongoClient.close();
+		//mongoClient.close();
 		return JSON.serialize(foundDocument);
 	}
     
@@ -229,7 +234,7 @@ public class UsuarioService {
 		MongoDatabase database = mongoClient.getDatabase("mongostudygroup");
 		MongoCollection<Document> collection = database.getCollection("usuario.preferencias");
 		List<Document> foundDocument = collection.find().into(new ArrayList<Document>());
-		mongoClient.close();
+		//mongoClient.close();
 		return JSON.serialize(foundDocument);
 	}          
 
@@ -264,7 +269,7 @@ public class UsuarioService {
 			}
 			doc.append("ramo", docRamos);
 			collection.insertOne(doc);
-			mongoClient.close();
+			//mongoClient.close();
 			return JSON.serialize(doc);
 			}
 		}
@@ -301,7 +306,7 @@ public class UsuarioService {
 			}
 			doc.append("ramo", docRamos);
 			collection.findOneAndReplace(Filters.eq("usuarioId", id+""), doc);
-			mongoClient.close();
+			//mongoClient.close();
 			return JSON.serialize(doc);
 			}
 		}
@@ -317,11 +322,94 @@ public class UsuarioService {
 			MongoDatabase database = mongoClient.getDatabase("mongostudygroup");
 			MongoCollection<Document> collection = database.getCollection("usuario.preferencias");
 			collection.findOneAndDelete(Filters.eq("usuarioId",id+""));
-			mongoClient.close();
+			//mongoClient.close();
 			return "{\"historialUsuarioEliminado\":\"" + "true" +  "\"}";
     	}
 		return "{\"historialUsuarioEliminado\":\"" + "false" +  "\"}";
 	}
+  
+    @POST
+    @Path("{id}/geo")
+    @Consumes({"application/json"})
+    //@Produces({"application/json"})
+    public void pushLocation(String rawJson, @PathParam("id") Integer id){
+    	
+    	MongoClient mongoClient = mongoEJB.getMongoClient();
+		MongoDatabase database = mongoClient.getDatabase("mongostudygroup");
+		MongoCollection<Document> collection = database.getCollection("usuario.locacion");
+		List<Document> foundDocument = collection.find(Filters.eq("usuarioId",id+"")).into(new ArrayList<Document>());
+		
+		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		Date date = new Date();
+		String current = dateFormat.format(date);
+		Document buff = Document.parse(rawJson);
+		
+		
+		if(rawJson != null){
+			if (foundDocument.isEmpty()){
+				
+				
+				
+				Document doc = new Document();
+				doc.append("location", buff.get("location"));
+				doc.append("date",current);
+				doc.append("active", true);
+				doc.append("usuarioId", id+"");
+				
+				collection.insertOne(doc);
+				//return JSON.serialize(doc);
+				
+			}else
+			{
+				Document doc = new Document();
+				doc.append("location", buff.get("location"));
+				doc.append("date",current);
+				doc.append("active",true);
+				doc.append("usuarioId", id+"");
+				
+				collection.findOneAndDelete(Filters.eq("usuarioId", id+""));
+				collection.insertOne(doc);
+				//collection.replaceOne(filter, replacement)
+				
+			}
+		
+		}
+		//mongoClient.close();
+		//return "{ \"hell\": \"yeah\"}";	
+    }
+    
+    
+    @GET
+    @Path("{id}/geo")
+    @Produces({"application/json"})
+    public String getLocation(@PathParam("id") Integer id){
+    	
+    	MongoClient mongoClient = mongoEJB.getMongoClient();
+		MongoDatabase database = mongoClient.getDatabase("mongostudygroup");
+		MongoCollection<Document> collection = database.getCollection("usuario.locacion");
+		List<Document> foundDocument = collection.find(Filters.eq("usuarioId",id+"")).into(new ArrayList<Document>());
+		//mongoClient.close();
+		return JSON.serialize(foundDocument);
+		
+		
+    }
+    
+    @GET
+    @Path("/geo")
+    @Produces({"application/json"})
+    public String getAllLocation(){
+    	
+    	MongoClient mongoClient = mongoEJB.getMongoClient();
+		MongoDatabase database = mongoClient.getDatabase("mongostudygroup");
+		MongoCollection<Document> collection = database.getCollection("usuario.locacion");
+		List<Document> foundDocument = collection.find().into(new ArrayList<Document>());
+    	
+		return JSON.serialize(foundDocument);
+		
+    }
+    
+    
+    
     
     
 }
