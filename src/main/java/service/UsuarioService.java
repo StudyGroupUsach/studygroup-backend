@@ -214,6 +214,24 @@ public class UsuarioService {
         return md5;
     }
     
+    // Entrega los ramos que un usuario puede tomar segun su carrera    
+	@GET
+    @Path("/ramos_a_elegir/{id}")
+    @Produces({"application/json"})
+    public String findRamosUsuario(@PathParam("id") Integer id) {
+		ListSerializer serializer = new ListSerializer();
+		Usuario usuario = usuarioFacadeEJB.find(id);
+		
+		if (usuario != null){
+			if (usuario.getCarrera() != null){
+				String result = serializer.RamoListSerializer(usuario.getCarrera().getRamos());
+				return result;
+			}
+		}
+		return "[]";
+		//return ramoFacadeEJB.find(id);
+    }
+    
     @GET
 	@Path("/{id}/ramos")
     @Produces({"application/json"})
@@ -226,6 +244,7 @@ public class UsuarioService {
 		return JSON.serialize(foundDocument);
 	}
     
+    // Pide el listado de ramos de preferencia, que son los ha mostrar cuando busque grupo. 
     @GET
 	@Path("/ramos")
     @Produces({"application/json"})
@@ -256,6 +275,8 @@ public class UsuarioService {
 			
 			List<Document> docRamos = new ArrayList<Document>();
 			for (int i = 0; i<entity.size();i++){
+				//return "{\"success\":\"true\"}";
+
 				Ramo ramo = entity.get(i);
 				if (ramo != null){
 					if(ramo.getCarrera() != null){

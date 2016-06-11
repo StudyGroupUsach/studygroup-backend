@@ -124,6 +124,19 @@ public class ListSerializer {
 		return stringCollector;
 	}
 	
+	public String LugarListSerializer(List<Lugar> lugares){
+		String stringCollector = "";
+		int size = lugares.size();
+		for (int i = 0; i < lugares.size();i++){
+			stringCollector = stringCollector+LugarSerializer(lugares.get(i));
+			if (size-i > 1){
+				stringCollector=stringCollector+",\n";
+			}
+		}
+		stringCollector = "["+stringCollector+"]";
+		return stringCollector;
+	}
+	
 	public String GrupoTemporalSerializer(GrupoTemporal grupoTemporal){
 		String grupoTemporalId = grupoTemporal.getGrupoTemporalId()+"";
 		String descripcionTemporal = grupoTemporal.getDescripcionTemporal();
@@ -145,8 +158,8 @@ public class ListSerializer {
 		}
 		if (grupoTemporal.getUsuario() != null){
 			if ((Integer)grupoTemporal.getUsuario().getUsuarioId() != null){
-				grupoTemporal.getUsuario().getUsuarioId();
-				grupoTemporal.getUsuario().getNombre();				
+				usuarioId = grupoTemporal.getUsuario().getUsuarioId()+"";
+				nombreUsuario = grupoTemporal.getUsuario().getNombre();				
 			}
 		}
 		String stringCollector = "{\n\"grupoTemporalId\":\""+grupoTemporalId+"\","
@@ -157,7 +170,7 @@ public class ListSerializer {
 				+ "\n\"ramoId\":\""+ramoId+"\","
 				+ "\n\"nombreRamo\":\""+nombreRamo+"\","
 				+ "\n\"usuarioId\":\""+usuarioId+"\","
-						+ "\n\"nombre\":"+nombreUsuario+"\n}";
+						+ "\n\"nombre\":\""+nombreUsuario+"\"\n}";
 		return stringCollector;
 	}
 	

@@ -17,8 +17,6 @@ import facade.RamoFacade;
 import model.Ramo;
 import facade.CarreraFacade;
 import model.Carrera;
-import facade.UsuarioFacade;
-import model.Usuario;
 import adapters.ListSerializer;
 
 @Path("/gestion_carreras")
@@ -30,8 +28,6 @@ public class GestionCarreraService {
 	@EJB
 	CarreraFacade carreraFacadeEJB;
 	
-	@EJB
-	UsuarioFacade usuarioFacadeEJB;
 	
 	Logger logger = Logger.getLogger(GestionCarreraService.class.getName());
 
@@ -137,13 +133,18 @@ public class GestionCarreraService {
 		//return ramoFacadeEJB.find(id);
     }
 	
+	//Verificar cambio para otros services.
+	
 	@POST
     @Path("/carreras/{carrera_id}")
     @Consumes({"application/xml", "application/json"})
     public void createRamo(Ramo entity, @PathParam("carrera_id") Integer carrera_id) {
 		if (entity.getNombreRamo() != null){
-			if (carreraFacadeEJB.find(carrera_id) != null){
-				entity.setCarrera(carreraFacadeEJB.find(carrera_id));
+			Carrera carrera = carreraFacadeEJB.find(carrera_id);
+			if (carrera != null){
+				entity.setCarrera(carrera);
+				//carrera.addRamo(entity);
+				//carreraFacadeEJB.edit(carrera);
 				ramoFacadeEJB.create(entity);
 			}
 		}
@@ -165,25 +166,6 @@ public class GestionCarreraService {
     public void deleteRamo(@PathParam("id") Integer id){
     	Ramo ramo = ramoFacadeEJB.find(id); 
     	ramoFacadeEJB.remove(ramo);
-    }
-    
-    // REST relacionado a Usuario
-    
-	@GET
-    @Path("/usuario/{id}")
-    @Produces({"application/json"})
-    public String findRamosUsuario(@PathParam("id") Integer id) {
-		ListSerializer serializer = new ListSerializer();
-		Usuario usuario = usuarioFacadeEJB.find(id);
-		
-		if (usuario != null){
-			if (usuario.getCarrera() != null){
-				String result = serializer.RamoListSerializer(usuario.getCarrera().getRamos());
-				return result;
-			}
-		}
-		return "[]";
-		//return ramoFacadeEJB.find(id);
     }
     
 }

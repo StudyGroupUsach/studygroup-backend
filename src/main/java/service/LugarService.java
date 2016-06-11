@@ -13,6 +13,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 
+import adapters.ListSerializer;
+import ejb.LugarFacadeEJB;
 import facade.LugarFacade;
 import model.Lugar;
 
@@ -25,22 +27,31 @@ public class LugarService {
 	Logger logger = Logger.getLogger(LugarService.class.getName());
 	
 	@GET
-	@Produces({"application/xml", "application/json"})
-	public List<Lugar> findAll(){
-		return lugarFacadeEJB.findAll();
+	@Produces({"application/json"})
+	public String findAll(){
+		ListSerializer serializer = new ListSerializer();
+		String result = serializer.LugarListSerializer(lugarFacadeEJB.findAll());
+		return result;
 	}
 	
 	@GET
     @Path("{id}")
-    @Produces({"application/xml", "application/json"})
-    public Lugar find(@PathParam("id") Integer id) {
-        return lugarFacadeEJB.find(id);
+    @Produces({"application/json"})
+    public String find(@PathParam("id") Integer id) {
+		ListSerializer serializer = new ListSerializer();
+		String result = serializer.LugarSerializer(lugarFacadeEJB.find(id));
+		return result;
     }
 	
 	@POST
     @Consumes({"application/xml", "application/json"})
-    public void create(Lugar entity) {
-		lugarFacadeEJB.create(entity);
+	@Produces({"application/xml", "application/json"})
+    public Lugar create(Lugar entity) {
+		if (entity.getLatitudLugar() != 0.0f && entity.getLongitudLugar() != 0.0f){
+			lugarFacadeEJB.create(entity);
+			return entity;
+		}
+		return new Lugar();
     }
 
     
@@ -48,6 +59,15 @@ public class LugarService {
     @Path("{id}")
     @Consumes({"application/xml", "application/json"})
     public void edit(@PathParam("id") Integer id, Lugar entity) {
+		Lugar lugar = lugarFacadeEJB.find(id);
+		if (lugar != null){
+			if (entity.getLatitudLugar() == 0.0f){
+				entity.setLatitudLugar(lugar.getLatitudLugar());
+			}
+			if (entity.getLongitudLugar() == 0.0f){
+				entity.setLongitudLugar(lugar.getLongitudLugar());
+			}
+		}
     	entity.setIdLugar(id.intValue());
     	lugarFacadeEJB.edit(entity);
     }
