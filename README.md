@@ -311,7 +311,7 @@ ID? Indica si tiene un ID como entrada por parametro a traves de la URL
       * "numeroMovil":"NUMEROS",
       * "pass":"STRING",
       * "carrera":{"carreraId":"ID","nombreCarrera":"STRING"}
-    * Salida: JSON Usuario
+    * Salida: JSON { "usuarioAgregado":"BOOLEAN"}
   4.  Modificar usuario
     * URL: http://mongostudygroup-app4tbd.rhcloud.com/servicios/usuarios/{ID}
     * Tipo: PUT
