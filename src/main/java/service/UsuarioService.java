@@ -389,6 +389,7 @@ public class UsuarioService {
 				doc.append("usuarioId", id+"");
 				
 				collection.findOneAndDelete(Filters.eq("usuarioId", id+""));
+				collection.findOneAndDelete(Filters.in("usuarioId", id+""));
 				collection.insertOne(doc);
 				//collection.replaceOne(filter, replacement)
 				
