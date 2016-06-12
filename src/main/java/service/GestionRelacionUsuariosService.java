@@ -157,9 +157,9 @@ public class GestionRelacionUsuariosService {
 	//Historial de usuarios con los que se ha visto un usuario en su ultimo grupo
 	
 	@GET
-	@Path("/{id}")
+	@Path("/encuentros_previos/{id}")
     @Produces({"application/json"})
-	public String getRamosSeleccionados(@PathParam("id") Integer id){
+	public String getEncuentrosPrevios(@PathParam("id") Integer id){
 		MongoClient mongoClient = mongoEJB.getMongoClient();
 		MongoDatabase database = mongoClient.getDatabase("mongostudygroup");
 		MongoCollection<Document> collection = database.getCollection("usuario.previosEncuentros");
@@ -205,6 +205,18 @@ public class GestionRelacionUsuariosService {
 		return "[ ]";
 	}
 	
+	@GET
+	@Path("/{id}")
+    @Produces({"application/json"})
+	public String getRamosSeleccionados(@PathParam("id") Integer id){
+		MongoClient mongoClient = mongoEJB.getMongoClient();
+		MongoDatabase database = mongoClient.getDatabase("mongostudygroup");
+		MongoCollection<Document> collection = database.getCollection("usuario.preferencias");
+		List<Document> foundDocument = collection.find(Filters.eq("usuarioId",id+"")).into(new ArrayList<Document>());
+		//mongoClient.close();
+		return JSON.serialize(foundDocument);
+	}
+	
 	@POST
 	@Path("/{id}")
     @Consumes({"application/xml", "application/json"})
@@ -246,13 +258,28 @@ public class GestionRelacionUsuariosService {
 	
 	
     @DELETE
-	@Path("/{id}")
+	@Path("/encuentros_previos/{id}")
     @Produces({"application/json"})
 	public String deleteRamosSeleccionados(@PathParam("id") Integer id){
     	if (usuarioFacadeEJB.find(id) == null){
     		MongoClient mongoClient = mongoEJB.getMongoClient();
 			MongoDatabase database = mongoClient.getDatabase("mongostudygroup");
 			MongoCollection<Document> collection = database.getCollection("usuario.previosEncuentros");
+			collection.findOneAndDelete(Filters.eq("usuarioId",id+""));
+			//mongoClient.close();
+			return "{\"encuentrosEliminados\":\"" + "true" +  "\"}";
+    	}
+		return "{\"encuentrosEliminados\":\"" + "false" +  "\"}";
+	}
+    
+    @DELETE
+	@Path("/{id}")
+    @Produces({"application/json"})
+	public String deleteEncuentrosPrevios(@PathParam("id") Integer id){
+    	if (usuarioFacadeEJB.find(id) == null){
+    		MongoClient mongoClient = mongoEJB.getMongoClient();
+			MongoDatabase database = mongoClient.getDatabase("mongostudygroup");
+			MongoCollection<Document> collection = database.getCollection("usuario.preferencias");
 			collection.findOneAndDelete(Filters.eq("usuarioId",id+""));
 			//mongoClient.close();
 			return "{\"historialUsuarioEliminado\":\"" + "true" +  "\"}";
