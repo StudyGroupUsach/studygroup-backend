@@ -177,7 +177,8 @@ ID? Indica si tiene un ID como entrada por parametro a traves de la URL
     * ID?: ID del usuario que lo crea
     * Entrada: JSON con:
       * "descripcionTemporal":"Descripcion del grupo y lugar",
-      * "idLugar":"ID"
+      * "idLugar":"ID",
+      * "ramoId": "ID"
     * Salida: No tiene
   4.  Cambiar el lugar
     * URL: http://mongostudygroup-app4tbd.rhcloud.com/servicios/grupos_temporales/cambiar_locacion/{ID}
@@ -230,7 +231,7 @@ ID? Indica si tiene un ID como entrada por parametro a traves de la URL
     * Entrada: JSON Usuario:
       * "mail":"CORREO@usach.cl",
       * "pass":"STRING"
-    * Salida: No tiene
+    * Salida: {"usuarioId":"id", "usuarioConectado":"BOOLEAN"}
 5. Servicios de Lugar
   * URL: http://mongostudygroup-app4tbd.rhcloud.com/servicios/lugares
   * Creacion, edicion y eliminacion de lugares.
