@@ -146,7 +146,7 @@ public class GestionRelacionUsuariosService {
 				Document result = new Document("usuarioId", id).append("usuario", usuarios);
 				
 				//return JSON.serialize(ramos.get(0));
-				mongoClient.close();
+				//mongoClient.close();
 				return JSON.serialize(result);
 				//return doc.get("ramo",aux.getClass()).toString();
 			}
@@ -164,7 +164,7 @@ public class GestionRelacionUsuariosService {
 		MongoDatabase database = mongoClient.getDatabase("mongostudygroup");
 		MongoCollection<Document> collection = database.getCollection("usuario.previosEncuentros");
 		List<Document> foundDocument = collection.find(Filters.eq("usuarioId",id+"")).into(new ArrayList<Document>());
-		mongoClient.close();
+		//mongoClient.close();
 		return JSON.serialize(foundDocument);
 	}
 	
@@ -199,7 +199,7 @@ public class GestionRelacionUsuariosService {
 			doc.append("usuario", docUsuarios);
 			//collection.insertOne(doc);
 			collection.findOneAndReplace(Filters.eq("usuarioId",id+""), doc);
-			mongoClient.close();
+			//mongoClient.close();
 			return JSON.serialize(doc);
 		}
 		return "[ ]";
@@ -214,7 +214,7 @@ public class GestionRelacionUsuariosService {
 		if (usuario != null){
 			MongoClient mongoClient = mongoEJB.getMongoClient();
 			MongoDatabase database = mongoClient.getDatabase("mongostudygroup");
-			MongoCollection<Document> collection = database.getCollection("usuario.previosEncuentros");
+			MongoCollection<Document> collection = database.getCollection("usuario.preferencias");
 			//List<Document> foundDocument = collection.find(Filters.eq("usuarioId",id+"")).into(new ArrayList<Document>());
 			//if (foundDocument.isEmpty()){ //No se habilitara actualizacion, solo POST
 
@@ -227,16 +227,18 @@ public class GestionRelacionUsuariosService {
 					if(ramoEntity.getCarrera() != null){
 						Document aux = new Document ("nombreRamo", ramoEntity.getNombreRamo())
 								.append("ramoId", ramoEntity.getRamoId()+"")
-								.append("carreraId", ramoEntity.getCarrera().getCarreraId())
-								.append("nombreCarrera", ramoEntity.getCarrera().getCarreraId());
+								.append("carreraId", ramoEntity.getCarrera().getCarreraId()+"")
+								.append("nombreCarrera", ramoEntity.getCarrera().getNombreCarrera());
 						docRamos.add(aux);
 					}
 				}
 			}
 			doc.append("ramo", docRamos);
-			//collection.insertOne(doc);
-			collection.findOneAndReplace(Filters.eq("usuarioId",id+""), doc);
-			mongoClient.close();
+			//
+			//collection.findOneAndDelete(Filters.eq("usuarioId",id+""));
+			collection.findOneAndDelete(Filters.in("usuarioId",id+""));
+			collection.insertOne(doc);
+			//mongoClient.close();
 			return JSON.serialize(doc);
 		}
 		return "[ ]";
@@ -252,7 +254,7 @@ public class GestionRelacionUsuariosService {
 			MongoDatabase database = mongoClient.getDatabase("mongostudygroup");
 			MongoCollection<Document> collection = database.getCollection("usuario.previosEncuentros");
 			collection.findOneAndDelete(Filters.eq("usuarioId",id+""));
-			mongoClient.close();
+			//mongoClient.close();
 			return "{\"historialUsuarioEliminado\":\"" + "true" +  "\"}";
     	}
 		return "{\"historialUsuarioEliminado\":\"" + "false" +  "\"}";
