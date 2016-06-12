@@ -3,8 +3,8 @@ package service;
 import java.util.List;
 import java.util.logging.Logger;
 import java.sql.Time;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+//import java.text.DateFormat;
+//import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 //import java.sql.Date;
 import java.util.Date;
@@ -25,10 +25,8 @@ import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
-import com.mongodb.util.JSON;
 
 import adapters.ListSerializer;
-import ejb.GrupoTemporalFacadeEJB;
 import facade.GrupoTemporalFacade;
 import facade.LugarFacade;
 import facade.RamoFacade;
@@ -97,7 +95,7 @@ public class GrupoTemporalService {
 						if(lugar != null){
 							entity.setLugar(lugar);
 							
-							DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+							//DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 							Date date = new Date();
 							java.sql.Date sqlDate = new java.sql.Date(date.getTime());
 							//String current = dateFormat.format(date);
@@ -130,7 +128,23 @@ public class GrupoTemporalService {
 
 		}
 	}
+	
+	//Cambiar la locacion
+	@PUT
+    @Path("/cambiar_locacion/{id}")
+    @Consumes({"application/xml", "application/json"})
+    public void editLocacionDeGrupoTemporal(@PathParam("id") Integer id, Lugar entity) {
+		GrupoTemporal grupoTemporal = grupoTemporalFacadeEJB.find(id);
+		if (grupoTemporal != null){
+			if (entity.getIdLugar() != 0){ 
+				Lugar lugar = lugarFacadeEJB.find(entity.getIdLugar());
+				grupoTemporal.setLugar(lugar);
+				grupoTemporalFacadeEJB.edit(grupoTemporal);
+			}
+		}
+    }
 
+	//Id del grupo temporal ya en la BDD, entity son los cambios propuestos
 
 	@PUT
     @Path("{id}")
@@ -154,7 +168,7 @@ public class GrupoTemporalService {
     }
     //El id es del grupo temporal
 	@PUT
-	@Path("agregar_integrantes/{id}")
+	@Path("/agregar_integrantes/{id}")
 	@Consumes({"application/xml", "application/json"})
 	public void agregarIntegrantes(@PathParam("id") Integer id, List<Usuario> usuarios){
 		if (usuarios != null){
@@ -199,7 +213,7 @@ public class GrupoTemporalService {
 		}
 	}
     
-    //FALTA ELIMINAR DE MONGO
+    //Elimina grupo de mongo y mysql //FALTA AGREGAR LISTADO DE USUARIOS A LISTADO DE ULTIMOS USUARIOS
     @DELETE
     @Path("{id}")
     public void delete(@PathParam("id") Integer id){

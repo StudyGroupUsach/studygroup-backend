@@ -19,7 +19,6 @@ import javax.ws.rs.Produces;
 
 import org.bson.Document;
 
-import com.mongodb.BasicDBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
@@ -244,7 +243,8 @@ public class UsuarioService {
 		return JSON.serialize(foundDocument);
 	}
     
-    // Pide el listado de ramos de preferencia, que son los ha mostrar cuando busque grupo. 
+    // Pide el listado de ramos de preferencia, que son los ha mostrar cuando busque grupo.
+    /*
     @GET
 	@Path("/ramos")
     @Produces({"application/json"})
@@ -255,7 +255,7 @@ public class UsuarioService {
 		List<Document> foundDocument = collection.find().into(new ArrayList<Document>());
 		//mongoClient.close();
 		return JSON.serialize(foundDocument);
-	}          
+	}          */
 
     
     @POST

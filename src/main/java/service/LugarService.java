@@ -1,6 +1,6 @@
 package service;
 
-import java.util.List;
+//import java.util.List;
 import java.util.logging.Logger;
 
 import javax.ejb.EJB;
@@ -14,7 +14,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 
 import adapters.ListSerializer;
-import ejb.LugarFacadeEJB;
 import facade.LugarFacade;
 import model.Lugar;
 
