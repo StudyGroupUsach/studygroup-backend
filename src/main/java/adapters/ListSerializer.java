@@ -119,7 +119,7 @@ public class ListSerializer {
 		String stringCollector = "{\n\"idLugar\":\""+idLugar+"\","
 				+ "\n\"latitudLugar\":\""+latitudLugar+"\","
 				+ "\n\"longitudLugar\":\""+longitudLugar+"\","
-				+ "\n\"grupoTemporals\":\""+grupoTemporals+"\","
+				+ "\n\"grupoTemporals\":"+grupoTemporals+","
 						+ "\n\"grupoHorarios\":"+grupoHorarios+"\n}";
 		return stringCollector;
 	}

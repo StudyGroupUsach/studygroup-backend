@@ -221,8 +221,46 @@ public class GrupoTemporalService {
 		MongoClient mongoClient = mongoEJB.getMongoClient();
 		MongoDatabase database = mongoClient.getDatabase("mongostudygroup");
 		MongoCollection<Document> collection = database.getCollection("grupoTemporal.integrantes");
+		MongoCollection<Document> collectionSalida = database.getCollection("usuario.previosEncuentros");
+		Document doc = collection.find(Filters.eq("grupoTemporalId", id+"")).first();
+		Object ob = doc.get("usuario");
+		List<Document> usuarios = (ArrayList<Document>)ob;
+		Document docSalida = new Document();
+		
+		
+		for (int i = 0; i < usuarios.size(); i++){
+			Document usuario = usuarios.get(i);
+			Document docAux = new Document();
+			List<Document> docUsuarios = new ArrayList<Document>();
+			docAux.append("usuarioId", usuario.getString("usuarioId")+"");
+			for (int j = 0; j < i; j++){
+				Document usuarioAux = usuarios.get(j);
+				Document docUsuario = new Document();
+				docUsuario.append("usuarioId", usuarioAux.getString("usuarioId")+"")
+					.append("mail", usuarioAux.getString("mail"))
+					.append("nombre", usuarioAux.getString("nombre"))
+					.append("apellidos", usuarioAux.getString("apellidos"))
+					.append("numeroMovil", usuarioAux.getString("numeroMovil"));
+				docUsuarios.add(docUsuario);
+			}
+			for (int j = i+1; j < usuarios.size(); j++){
+				Document usuarioAux = usuarios.get(j);
+				Document docUsuario = new Document();
+				docUsuario.append("usuarioId", usuarioAux.getString("usuarioId")+"")
+					.append("mail", usuarioAux.getString("mail"))
+					.append("nombre", usuarioAux.getString("nombre"))
+					.append("apellidos", usuarioAux.getString("apellidos"))
+					.append("numeroMovil", usuarioAux.getString("numeroMovil"));
+				docUsuarios.add(docUsuario);
+			}
+			collectionSalida.findOneAndDelete(Filters.eq("usuarioId", usuario.getString("usuarioId")+""));
+			docAux.append("usuario", docUsuarios);
+			collectionSalida.insertOne(docAux);
+		}
 		collection.findOneAndDelete(Filters.eq("grupoTemporalId",id+""));
-    	grupoTemporalFacadeEJB.remove(grupoTemporal);
+		if (grupoTemporal != null){
+			grupoTemporalFacadeEJB.remove(grupoTemporal);
+		}
     }
     
     //Eliminar solo un usuario por su id, el id del link es el del grupoTemporal
