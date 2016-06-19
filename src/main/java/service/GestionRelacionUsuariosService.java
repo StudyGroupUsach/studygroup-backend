@@ -263,7 +263,7 @@ public class GestionRelacionUsuariosService {
     @DELETE
 	@Path("/encuentros_previos/{id}")
     @Produces({"application/json"})
-	public String deleteRamosSeleccionados(@PathParam("id") Integer id){
+	public String deleteEncuentrosPrevios(@PathParam("id") Integer id){
     	if (usuarioFacadeEJB.find(id) == null){
     		MongoClient mongoClient = mongoEJB.getMongoClient();
 			MongoDatabase database = mongoClient.getDatabase("mongostudygroup");
@@ -278,16 +278,16 @@ public class GestionRelacionUsuariosService {
     @DELETE
 	@Path("/{id}")
     @Produces({"application/json"})
-	public String deleteEncuentrosPrevios(@PathParam("id") Integer id){
+	public String deleteRamosSeleccionados(@PathParam("id") Integer id){
     	if (usuarioFacadeEJB.find(id) == null){
     		MongoClient mongoClient = mongoEJB.getMongoClient();
 			MongoDatabase database = mongoClient.getDatabase("mongostudygroup");
 			MongoCollection<Document> collection = database.getCollection("usuario.preferencias");
 			collection.findOneAndDelete(Filters.eq("usuarioId",id+""));
 			//mongoClient.close();
-			return "{\"historialUsuarioEliminado\":\"" + "true" +  "\"}";
+			return "{\"listaDePreferenciasEliminada\":\"" + "true" +  "\"}";
     	}
-		return "{\"historialUsuarioEliminado\":\"" + "false" +  "\"}";
+		return "{\"listaDePreferenciasEliminada\":\"" + "false" +  "\"}";
 	}
 	
 }
