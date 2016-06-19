@@ -66,6 +66,9 @@ public class LugarService {
 			if (entity.getLongitudLugar() == 0.0f){
 				entity.setLongitudLugar(lugar.getLongitudLugar());
 			}
+			if (entity.getNombreLugar() == null){
+				entity.setNombreLugar(lugar.getNombreLugar());
+			}
 		}
     	entity.setIdLugar(id.intValue());
     	lugarFacadeEJB.edit(entity);

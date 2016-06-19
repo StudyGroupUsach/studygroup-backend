@@ -25,6 +25,9 @@ public class Lugar implements Serializable {
 
 	@Column(name="longitud_lugar")
 	private float longitudLugar;
+	
+	@Column(name="nombre_lugar")
+	private String nombreLugar;
 
 	//bi-directional many-to-one association to GrupoHorario
 	@OneToMany(mappedBy="lugar")
@@ -59,6 +62,14 @@ public class Lugar implements Serializable {
 
 	public void setLongitudLugar(float longitudLugar) {
 		this.longitudLugar = longitudLugar;
+	}
+	
+	public String getNombreLugar() {
+		return this.nombreLugar;
+	}
+
+	public void setNombreLugar(String nombreLugar) {
+		this.nombreLugar = nombreLugar;
 	}
 
 	public List<GrupoHorario> getGrupoHorarios() {

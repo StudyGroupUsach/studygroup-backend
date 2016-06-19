@@ -165,7 +165,10 @@ public class GestionRelacionUsuariosService {
 		MongoCollection<Document> collection = database.getCollection("usuario.previosEncuentros");
 		List<Document> foundDocument = collection.find(Filters.eq("usuarioId",id+"")).into(new ArrayList<Document>());
 		//mongoClient.close();
-		return JSON.serialize(foundDocument);
+		if (!foundDocument.isEmpty()) {
+		return JSON.serialize(foundDocument.get(0));
+		}
+		return "[ ]";
 	}
 	
 	@POST

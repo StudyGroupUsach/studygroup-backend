@@ -25,6 +25,7 @@ import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
+import com.mongodb.util.JSON;
 
 import adapters.ListSerializer;
 import facade.GrupoTemporalFacade;
@@ -57,6 +58,27 @@ public class GrupoTemporalService {
 	
 	Logger logger = Logger.getLogger(GrupoTemporalService.class.getName());
 	
+	//GET LISTADO DE USUARIOS
+	// Id del grupo temporal
+	@GET
+	@Path("/integrantes/{id}")
+	@Produces({"application/json"})
+	public String usuariosDeUnGrupo(@PathParam("id") Integer id){
+		MongoClient mongoClient = mongoEJB.getMongoClient();
+		MongoDatabase database = mongoClient.getDatabase("mongostudygroup");
+		MongoCollection<Document> collection = database.getCollection("grupoTemporal.integrantes");
+		
+		Document doc = collection.find(Filters.in("grupoTemporalId", id+"")).first();
+		if (doc != null){
+			List<Document> docUsuarios = (ArrayList<Document>)doc.get("usuario");
+			return JSON.serialize(docUsuarios);
+		}
+		
+		
+		return null;
+	}
+	
+	
 	@GET
 	@Produces({"application/json"})
 	public String findAll(){
@@ -73,6 +95,7 @@ public class GrupoTemporalService {
 		String result = serializer.GrupoTemporalSerializer(grupoTemporalFacadeEJB.find(id));
         return result;
     }
+	
 	
 	@POST
 	@Path("{id}")
@@ -213,7 +236,7 @@ public class GrupoTemporalService {
 		}
 	}
     
-    //Elimina grupo de mongo y mysql //FALTA AGREGAR LISTADO DE USUARIOS A LISTADO DE ULTIMOS USUARIOS
+    //Elimina grupo de mongo y mysql y agrega los usuarios al listado de encuentros previos
     @DELETE
     @Path("{id}")
     public void delete(@PathParam("id") Integer id){

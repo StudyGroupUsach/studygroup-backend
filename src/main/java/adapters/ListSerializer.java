@@ -92,7 +92,7 @@ public class ListSerializer {
 				+ "\n\"nombre\":\""+nombre+"\","
 				+ "\n\"apellidos\":\""+apellidos+"\","
 				+ "\n\"ramoId\":\""+ramoId+"\","
-						+ "\n\"nombreRamo\":"+nombreRamo+"\n}";
+						+ "\n\"nombreRamo\":\""+nombreRamo+"\"\n}";
 		return stringCollector;
 	}
 	
@@ -113,12 +113,14 @@ public class ListSerializer {
 		String idLugar = lugar.getIdLugar()+"";
 		String latitudLugar = lugar.getLatitudLugar()+"";
 		String longitudLugar = lugar.getLongitudLugar()+"";
+		String nombreLugar = lugar.getNombreLugar();
 		String grupoTemporals = GrupoTemporalListSerializer(lugar.getGrupoTemporals());
 		String grupoHorarios = GrupoHorarioListSerializer(lugar.getGrupoHorarios());		
 		
 		String stringCollector = "{\n\"idLugar\":\""+idLugar+"\","
 				+ "\n\"latitudLugar\":\""+latitudLugar+"\","
 				+ "\n\"longitudLugar\":\""+longitudLugar+"\","
+				+ "\n\"nombreLugar\":\""+nombreLugar+"\","
 				+ "\n\"grupoTemporals\":"+grupoTemporals+","
 						+ "\n\"grupoHorarios\":"+grupoHorarios+"\n}";
 		return stringCollector;

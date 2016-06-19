@@ -29,8 +29,8 @@ public void init() {
 	//Integer mongoPort = 27017;
 	String user = "admin";
 	String password = "I1aPBBqdCq1i";
-	//String url = "127.0.0.1";
-	String url = "127.7.45.2";
+	String url = "127.0.0.1";
+	//String url = "127.7.45.2";
 	String port = "27017";
 	
 	String connector = "mongodb://" + user + ":" + password + "@" + url + ":" + port;
