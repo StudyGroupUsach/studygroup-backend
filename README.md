@@ -579,3 +579,31 @@ ID? Indica si tiene un ID como entrada por parametro a traves de la URL
     * ID?: ID del perfil de ayudante
     * Entrada: No tiene
     * Salida: No tiene
+  7. Obtener horario libre de un ayudante
+    * URL: http://mongostudygroup-app4tbd.rhcloud.com/servicios/perfiles_ayudantes/horario_libre/{ID}
+    * Tipo: GET
+    * ID?: ID de Perfil de Ayudante
+    * Entrada: No Tiene
+    * Salida: JSON de horario libre:
+      * "perfilAyudanteId":"ID",
+      * "horario":"STRING"
+  8. Agregar un horario libre a un ayudante sin horario libre
+    * URL: http://mongostudygroup-app4tbd.rhcloud.com/servicios/perfiles_ayudantes/horario_libre/{ID}
+    * Tipo: POST
+    * ID?: ID de Perfil de Ayudante
+    * Entrada: JSON de horario libre: (Recordar separar por ; ej: L2;S3)
+      * "horario":"STRING"
+    * Salida: No tieen
+  9. Cambiar horario libre de un ayudante
+    * URL: http://mongostudygroup-app4tbd.rhcloud.com/servicios/perfiles_ayudantes/horario_libre/{ID}
+    * Tipo: PUT
+    * ID?: ID de Perfil de Ayudante
+    * Entrada: JSON de horario libre:
+      * "horario":"STRING"
+    * Salida: No tiene
+  10. Eliminar horario libre de un ayudante
+    * URL: http://mongostudygroup-app4tbd.rhcloud.com/servicios/perfiles_ayudantes/horario_libre/{ID}
+    * Tipo: DELETE
+    * ID?: ID de Perfil de Ayudante
+    * Entrada: No tiene
+    * Salida: No tiene

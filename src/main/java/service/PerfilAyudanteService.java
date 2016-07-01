@@ -20,6 +20,7 @@ import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
+import com.mongodb.util.JSON;
 
 import adapters.ListSerializer;
 import facade.PerfilAyudanteFacade;
@@ -194,5 +195,78 @@ public class PerfilAyudanteService {
 		}
 		return null;
 	}
+	@GET
+    @Path("horario_libre/{id}")
+	@Produces({"application/json"})
+    public String getHorarioLibre(@PathParam("id") Integer id){
+		if (perfilAyudanteFacadeEJB.find(id) != null){
+				MongoClient mongoClient = mongoEJB.getMongoClient();
+				MongoDatabase database = mongoClient.getDatabase("mongostudygroup");
+				MongoCollection<Document> collection = database.getCollection("perfilAyudante.horariosLibres");
+				Document doc = collection.find(Filters.eq("perfilAyudanteId", id+"")).first();
+				if (doc != null){					
+					return JSON.serialize(doc);
+				}
+			
+		}
+		return "[ ]";
+	}
+	
+	
+	@POST
+    @Path("horario_libre/{id}")
+	@Consumes({"application/xml", "application/json"})
+    public void addHorarioLibre(@PathParam("id") Integer id, String rawJson){
+		if (perfilAyudanteFacadeEJB.find(id) != null){
+			Document horario = Document.parse(rawJson);
+			String stringHorario = horario.getString("horario");
+			if (stringHorario != null){
+				MongoClient mongoClient = mongoEJB.getMongoClient();
+				MongoDatabase database = mongoClient.getDatabase("mongostudygroup");
+				MongoCollection<Document> collection = database.getCollection("perfilAyudante.horariosLibres");
+				Document doc = collection.find(Filters.eq("perfilAyudanteId", id+"")).first();
+				if (doc == null){
+					Document newHorario = new Document().append("perfilAyudanteId", id+"").
+							append("horario", stringHorario);
+					collection.insertOne(newHorario);
+				}
+			}
+			
+		}
+	}
+	
+	@PUT
+    @Path("horario_libre/{id}")
+	@Consumes({"application/xml", "application/json"})
+    public void editHorarioLibre(@PathParam("id") Integer id, String rawJson){
+		if (perfilAyudanteFacadeEJB.find(id) != null){
+			Document horario = Document.parse(rawJson);
+			String stringHorario = horario.getString("horario");
+			if (stringHorario != null){
+				MongoClient mongoClient = mongoEJB.getMongoClient();
+				MongoDatabase database = mongoClient.getDatabase("mongostudygroup");
+				MongoCollection<Document> collection = database.getCollection("perfilAyudante.horariosLibres");
+				Document doc = collection.find(Filters.eq("perfilAyudanteId", id+"")).first();
+				if (doc != null){
+					Document newHorario = new Document().append("perfilAyudanteId", id+"").
+							append("horario", stringHorario);
+					collection.replaceOne(Filters.eq("perfilAyudanteId", id+""), newHorario);
+				}
+			}
+			
+		}
+	}
+    
+	@DELETE
+    @Path("horario_libre/{id}")
+    public void removeHorarioLibre(@PathParam("id") Integer id){
+		if (perfilAyudanteFacadeEJB.find(id) != null){
+				MongoClient mongoClient = mongoEJB.getMongoClient();
+				MongoDatabase database = mongoClient.getDatabase("mongostudygroup");
+				MongoCollection<Document> collection = database.getCollection("perfilAyudante.horariosLibres");
+				collection.findOneAndDelete(Filters.eq("perfilAyudanteId", id+""));			
+		}
+	}
+
 
 }
