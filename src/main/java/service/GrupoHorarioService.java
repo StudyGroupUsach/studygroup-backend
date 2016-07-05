@@ -100,12 +100,13 @@ public class GrupoHorarioService {
 	@POST
 	@Path("{id}")
     @Consumes({"application/xml", "application/json"})
-    public void create(@PathParam("id") Integer id, String rawJson) {
+	@Produces({"application/json"})
+    public String create(@PathParam("id") Integer id, String rawJson) {
 		PerfilAyudante perfilAyudante = perfilAyudanteFacadeEJB.find(id);
 		if (perfilAyudante != null){
 			Usuario usuario = perfilAyudante.getUsuario();
 			GrupoHorario entity = new GrupoHorario();
-			entity.setUsuarioId(id);
+			entity.setUsuarioId(usuario.getUsuarioId());
 			entity.setPerfilAyudante(perfilAyudante);
 			Document buff = Document.parse(rawJson);
 			Integer ramoId = (Integer) buff.get("ramoId");
@@ -122,7 +123,15 @@ public class GrupoHorarioService {
 							Date fechaInicio = buff.getDate("fechaInicio");
 							Date fechaTermino = buff.getDate("fechaTermino");
 							if (descripcionHorario != null && fechaInicio != null && fechaTermino != null){
-								
+								String mediosPago = buff.getString("mediosPago");
+								String tipoPago = buff.getString("tipoPago");
+								if (mediosPago != null && tipoPago != null){
+									entity.setMediosPago(mediosPago);
+									entity.setTipoPago(tipoPago);
+								} else {
+									entity.setMediosPago("Efectivo");
+									entity.setTipoPago("Acordar con el Vendedor");
+								}
 							
 								//DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 								//Date date = new Date();
@@ -133,8 +142,7 @@ public class GrupoHorarioService {
 								entity.setFechaInicio(fechaInicio);
 								entity.setFechaTermino(fechaTermino);
 								entity.setDescripcionHorario(descripcionHorario);
-								entity.setMediosPago("Efectivo");
-								entity.setTipoPago("Acordar con el Vendedor");
+								
 								//entity.setDuracionTemporal(time);
 								//entity.setInicioTemporal(sqlDate);
 								//entity.setDescripcionTemporal(buff.getString("descripcionTemporal"));
@@ -153,6 +161,7 @@ public class GrupoHorarioService {
 								doc.append("grupoHorarioId",entity.getGrupoHorarioId()+"").append("usuario", docUsuarios);
 							
 								collection.insertOne(doc);
+								return JSON.serialize(doc);
 							}
 						}
 					}
@@ -161,6 +170,7 @@ public class GrupoHorarioService {
 			}
 
 		}
+		return "[ ]";
 		
     }
 

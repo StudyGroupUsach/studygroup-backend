@@ -53,12 +53,14 @@ public class ListSerializer {
 	}
 	
 	public String GrupoHorarioSerializer(GrupoHorario grupoHorario){
+		String grupoHorarioId = grupoHorario.getGrupoHorarioId()+"";
 		String descripcionHorario = grupoHorario.getDescripcionHorario();
 		String fechaInicio = grupoHorario.getFechaInicio().toString();
 		String fechaTermino = grupoHorario.getFechaTermino().toString();
 		String mediosPago = grupoHorario.getMediosPago();
 		String tipoPago = grupoHorario.getTipoPago();
 		String idLugar = "";
+		String nombreLugar = "";
 		String usuarioId = "";
 		String perfilAyudanteId = "";
 		String nombre = "";
@@ -70,6 +72,7 @@ public class ListSerializer {
 		}
 		if (grupoHorario.getLugar() != null){
 			idLugar = grupoHorario.getLugar().getIdLugar()+"";
+			nombreLugar = grupoHorario.getLugar().getNombreLugar();
 		}
 		if (grupoHorario.getPerfilAyudante() != null){
 			perfilAyudanteId = grupoHorario.getPerfilAyudante().getPerfilAyudanteId()+"";
@@ -81,12 +84,14 @@ public class ListSerializer {
 			ramoId = grupoHorario.getRamo().getRamoId()+"";
 		}
 		
-		String stringCollector = "{\n\"descripcionHorario\":\""+descripcionHorario+"\","
+		String stringCollector = "{\n\"grupoHorarioId\":\""+grupoHorarioId+"\","
+				+ "\n\"descripcionHorario\":\""+descripcionHorario+"\","
 				+ "\n\"fechaInicio\":\""+fechaInicio+"\","
 				+ "\n\"fechaTermino\":\""+fechaTermino+"\","
 				+ "\n\"mediosPago\":\""+mediosPago+"\","
 				+ "\n\"tipoPago\":\""+tipoPago+"\","
 				+ "\n\"idLugar\":\""+idLugar+"\","
+				+ "\n\"nombreLugar\":\""+nombreLugar+"\","
 				+ "\n\"usuarioId\":\""+usuarioId+"\","
 				+ "\n\"perfilAyudanteId\":\""+perfilAyudanteId+"\","
 				+ "\n\"nombre\":\""+nombre+"\","
@@ -145,12 +150,14 @@ public class ListSerializer {
 		String duracionTemporal = grupoTemporal.getDuracionTemporal().toString(); //Time
 		String inicioTemporal = grupoTemporal.getInicioTemporal().toString(); //Date
 		String idLugar = "";
+		String nombreLugar = "";
 		String ramoId = "";
 		String nombreRamo = "";
 		String usuarioId = "";
 		String nombreUsuario = "";
 		if (grupoTemporal.getLugar() != null){
 			idLugar = grupoTemporal.getLugar().getIdLugar()+""; 
+			nombreLugar = grupoTemporal.getLugar().getNombreLugar();
 		}
 		if (grupoTemporal.getRamo() != null){
 			if ((Integer)grupoTemporal.getRamo().getRamoId() != null){
@@ -169,6 +176,7 @@ public class ListSerializer {
 				+ "\n\"duracionTemporal\":\""+duracionTemporal+"\","
 				+ "\n\"inicioTemporal\":\""+inicioTemporal+"\","
 				+ "\n\"idLugar\":\""+idLugar+"\","
+				+ "\n\"nombreLugar\":\""+nombreLugar+"\","
 				+ "\n\"ramoId\":\""+ramoId+"\","
 				+ "\n\"nombreRamo\":\""+nombreRamo+"\","
 				+ "\n\"usuarioId\":\""+usuarioId+"\","

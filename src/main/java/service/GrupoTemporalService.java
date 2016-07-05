@@ -100,8 +100,8 @@ public class GrupoTemporalService {
 	@POST
 	@Path("{id}")
     @Consumes({"application/xml", "application/json"})
-//	@Produces("text/plain")
-    public void create(@PathParam("id") Integer id, String rawJson) {
+	@Produces("application/json")
+    public String create(@PathParam("id") Integer id, String rawJson) {
 		Usuario usuario = usuarioFacadeEJB.find(id);
 		if (usuario != null){
 			GrupoTemporal entity = new GrupoTemporal();
@@ -142,6 +142,7 @@ public class GrupoTemporalService {
 							doc.append("grupoTemporalId",entity.getGrupoTemporalId()+"").append("usuario", docUsuarios);
 							
 							collection.insertOne(doc);
+							return JSON.serialize(doc);
 							
 						}
 					}
@@ -150,6 +151,7 @@ public class GrupoTemporalService {
 			}
 
 		}
+		return "[ ]";
 	}
 	
 	//Cambiar la locacion

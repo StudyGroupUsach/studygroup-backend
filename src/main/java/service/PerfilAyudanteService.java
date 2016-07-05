@@ -54,7 +54,7 @@ public class PerfilAyudanteService {
     //id del perfil_usuario
 	@GET
     @Path("{id}")
-    @Produces({"application/xml", "application/json"})
+    @Produces({"application/json"})
     public String find(@PathParam("id") Integer id) {
 		ListSerializer serializer = new ListSerializer();
 		String result = serializer.PerfilAyudanteSerializer(perfilAyudanteFacadeEJB.find(id));
@@ -65,7 +65,8 @@ public class PerfilAyudanteService {
 	@POST
 	@Path("{id}")
     @Consumes({"application/xml", "application/json"})
-    public void create(@PathParam("id") Integer id, PerfilAyudante entity) {
+	@Produces({"application/json"})
+    public String create(@PathParam("id") Integer id, PerfilAyudante entity) {
 		Usuario usuario = usuarioFacadeEJB.find(id);
 		if (usuario != null){
 			if (encontrarPorIdDeUsuario(id) == null){
@@ -85,11 +86,13 @@ public class PerfilAyudanteService {
 								.append("usuarioId", id+"")
 								.append("valoracion", new ArrayList<Document>());
 						collection.insertOne(doc);
+						return JSON.serialize(doc);
 					}
 					 
 				}
 			}
 		}
+		return "[ ]";
     }
 
     //id del perfil_usuario
